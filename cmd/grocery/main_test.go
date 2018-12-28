@@ -9,21 +9,12 @@ import (
 	"time"
 )
 
-//var ctx context.Context
-//var cancel context.CancelFunc
-//
-//func TestMain(m *testing.M) {
-//
-//	ctx, cancel = pkg.Initilize()
-//	os.Exit(0)
-//}
-
 func TestInsert(t *testing.T) {
-	ctx, cancel := pkg.Initilize()
-	defer cancel()
 
-	db, _ := pkg.ConfigDB(ctx)
-	collection := db.Collection("numbers")
+	a := pkg.App{}
+	a.CollectionName = "numbers"
+	ctx, cancel := a.Initilize()
+	defer cancel()
 
 	ctx, _ = context.WithTimeout(context.Background(), 5*time.Second)
 
@@ -38,21 +29,12 @@ func TestInsert(t *testing.T) {
 	s.Price = 1323
 	s.SaleDate = time.Now()
 
-	_, err := collection.InsertOne(ctx, s)
+	a.AddItem(ctx, s)
+	a.DeleteMany(ctx, bson.M{"product_name": "Turkey Test Parts"})
 
-	if err != nil {
+	if a.DeleteResult.DeletedCount != 1 {
 		t.FailNow()
 	}
-
-	result, err := collection.DeleteMany(ctx, bson.M{"product_name": "Turkey Test Parts"})
-
-	if err != nil {
-		log.Printf("error deleting: %v", err)
-	}
-
-	if result.DeletedCount != 1 {
-		t.FailNow()
-	}
-	log.Printf("Delete count: %d\n", result.DeletedCount)
+	log.Printf("Delete count: %d\n", a.DeleteResult.DeletedCount)
 
 }

@@ -1,0 +1,28 @@
+dist: trusty
+sudo: false
+matrix:
+  include:
+  - language: go
+    go:
+    - 1.11
+    env:
+    - GOMAXPROCS=4
+    os:
+    - linux
+    install:
+    - go get github.com/mongodb/mongo-go-driver/mongo
+    before_install:
+    - openssl aes-256-cbc -k "$super_secret_password" -in .freeMongoDB.enc -out .freeMongoDB -d
+    - cp .freeMongoDB ~/.
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+      > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - "./cc-test-reporter before-build"
+    script:
+    - go test -race -v -coverprofile=c0.out github.com/mchirico/grocery/cmd/grocery
+    - go test -race -v -coverprofile=c1.out github.com/mchirico/grocery/pkg
+    after_success:
+    - cat c0.out c1.out > c.out
+    - bash <(curl -s https://codecov.io/bash)
+    - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+

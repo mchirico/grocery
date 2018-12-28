@@ -17,6 +17,15 @@ const (
 	DBKey  = key("dbKey")
 )
 
+type App struct {
+	DB              *mongo.Database
+	Collection      *mongo.Collection
+	CollectionName  string
+	Error           error
+	InsertOneResult *mongo.InsertOneResult
+	DeleteResult    *mongo.DeleteResult
+}
+
 type MongoStruct struct {
 	URI string `json:"uri"`
 	DB  string `json:"db"`
@@ -27,7 +36,7 @@ func readFile(file string) (string, error) {
 	return string(data), err
 }
 
-func Initilize() (context.Context, context.CancelFunc) {
+func (a *App) Initilize() (context.Context, context.CancelFunc) {
 
 	mongoSetup := MongoStruct{}
 	usr, _ := user.Current()
@@ -46,7 +55,25 @@ func Initilize() (context.Context, context.CancelFunc) {
 	ctx = context.WithValue(ctx, UriKey, mongoSetup.URI)
 	ctx = context.WithValue(ctx, DBKey, mongoSetup.DB)
 	ctx, cancel := context.WithCancel(ctx)
+
+	a.DB, a.Error = ConfigDB(ctx)
+	a.Collection = a.DB.Collection("numbers")
+
 	return ctx, cancel
+}
+
+func (a *App) AddItem(ctx context.Context, document interface{}) {
+	a.InsertOneResult, a.Error = a.Collection.InsertOne(ctx, document)
+}
+
+func (a *App) DeleteMany(ctx context.Context, document interface{}) {
+	a.DeleteResult, a.Error = a.Collection.DeleteMany(ctx, document)
+}
+
+func (a *App) Find(ctx context.Context, document interface{}, records interface{}) {
+
+
+
 }
 
 func ConfigDB(ctx context.Context) (*mongo.Database, error) {
