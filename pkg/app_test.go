@@ -40,8 +40,18 @@ func TestInsert(t *testing.T) {
 
 func TestFind(t *testing.T) {
 
+	type B struct {
+		A string `bson:"a_final""`
+	}
+
+	type A struct {
+		B    B      `bson:"b"`
+		Name string `bson:"name"`
+	}
+
 	type PriceStruct struct {
 		Price int `bson:"price"`
+		Tree  A   `bson:"a"`
 	}
 
 	type Test struct {
