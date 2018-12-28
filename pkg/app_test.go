@@ -37,3 +37,36 @@ func TestInsert(t *testing.T) {
 	log.Printf("Delete count: %d\n", a.DeleteResult.DeletedCount)
 
 }
+
+func TestFind(t *testing.T) {
+
+	a := App{}
+	a.CollectionName = "numbers"
+	ctx, cancel := a.Initilize()
+	defer cancel()
+
+	ctx, _ = context.WithTimeout(context.Background(), 5*time.Second)
+
+	type Test struct {
+		ProductName string    `bson:"product_name"`
+		Price       int       `bson:"price"`
+		SaleDate    time.Time `bson:"sale_date"`
+	}
+
+	s := Test{}
+	s.ProductName = "Turkey Test2"
+	s.Price = 1323
+	s.SaleDate = time.Now()
+
+	a.AddItem(ctx, s)
+	a.DeleteMany(ctx, bson.M{"product_name": "Turkey Test2"})
+
+	if a.DeleteResult.DeletedCount != 1 {
+		t.FailNow()
+	}
+	log.Printf("Delete count: %d\n", a.DeleteResult.DeletedCount)
+
+}
+
+
+

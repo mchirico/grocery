@@ -70,6 +70,12 @@ func (a *App) DeleteMany(ctx context.Context, document interface{}) {
 	a.DeleteResult, a.Error = a.Collection.DeleteMany(ctx, document)
 }
 
+func (a *App) Find(ctx context.Context, document interface{}, records interface{}) {
+
+
+
+}
+
 func ConfigDB(ctx context.Context) (*mongo.Database, error) {
 	client, err := mongo.NewClient(ctx.Value(UriKey).(string))
 	err = client.Connect(ctx)
