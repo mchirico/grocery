@@ -41,7 +41,9 @@ func (a *App) Initilize() (context.Context, context.CancelFunc) {
 	mongoSetup := MongoStruct{}
 	usr, _ := user.Current()
 	//file := usr.HomeDir + "/.groceryMongoDB"
-	file := usr.HomeDir + "/.freeMongoDB"
+	//file := usr.HomeDir + "/.freeMongoDB"
+	file := usr.HomeDir + "/.freeMongoDB2"
+	//file := usr.HomeDir + "/.aipiggybot"
 
 	jsonData, err := readFile(file)
 	if err != nil {
@@ -68,6 +70,10 @@ func (a *App) AddItem(ctx context.Context, document interface{}) {
 
 func (a *App) DeleteMany(ctx context.Context, document interface{}) {
 	a.DeleteResult, a.Error = a.Collection.DeleteMany(ctx, document)
+}
+
+func (a *App) Find(ctx context.Context, document interface{}, records interface{}) {
+
 }
 
 func ConfigDB(ctx context.Context) (*mongo.Database, error) {
