@@ -12,8 +12,8 @@ matrix:
     install:
     - go get github.com/mongodb/mongo-go-driver/mongo
     before_install:
-      - openssl aes-256-cbc -k "$super_secret_password" -in .freeMongoDB.enc -out .freeMongoDB -d
-      - cp .freeMongoDB ~/.
+    - openssl aes-256-cbc -k "$super_secret_password" -in .freeMongoDB.enc -out .freeMongoDB -d
+    - cp .freeMongoDB ~/.
     - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
       > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
