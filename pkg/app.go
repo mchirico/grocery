@@ -42,6 +42,7 @@ func (a *App) Initilize() (context.Context, context.CancelFunc) {
 	usr, _ := user.Current()
 	//file := usr.HomeDir + "/.groceryMongoDB"
 	file := usr.HomeDir + "/.freeMongoDB"
+	//file := usr.HomeDir + "/.freeMongoDB2"
 
 	jsonData, err := readFile(file)
 	if err != nil {
@@ -71,8 +72,6 @@ func (a *App) DeleteMany(ctx context.Context, document interface{}) {
 }
 
 func (a *App) Find(ctx context.Context, document interface{}, records interface{}) {
-
-
 
 }
 
