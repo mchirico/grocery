@@ -10,32 +10,27 @@ import (
 
 func main() {
 
-	ctx, cancel := pkg.Initilize()
+	a := pkg.App{}
+	a.CollectionName = "numbers"
+	ctx, cancel := a.Initilize()
 	defer cancel()
-
-	db, _ := pkg.ConfigDB(ctx)
-	collection := db.Collection("numbers")
 
 	ctx, _ = context.WithTimeout(context.Background(), 5*time.Second)
 
-	type Sale struct {
+	type Test struct {
 		ProductName string    `bson:"product_name"`
 		Price       int       `bson:"price"`
 		SaleDate    time.Time `bson:"sale_date"`
 	}
 
-	s := Sale{}
+	s := Test{}
 	s.ProductName = "Turkey"
 	s.Price = 1323
 	s.SaleDate = time.Now()
 
-	//res, err := collection.InsertOne(ctx, bson.M{"name": "pi",
-	//	"value": "ISODate(\"2014-11-04T11:22:19.589Z\")"})
+	a.AddItem(ctx, s)
 
-	res, err := collection.InsertOne(ctx, s)
-	id := res.InsertedID
-
-	log.Printf("id: %s\n", id)
+	collection := a.Collection
 
 	ctx, _ = context.WithTimeout(context.Background(), 30*time.Second)
 	cur, err := collection.Find(ctx, bson.M{
@@ -47,7 +42,7 @@ func main() {
 
 	for cur.Next(ctx) {
 		//var result bson.M
-		var result Sale
+		var result Test
 		err := cur.Decode(&result)
 		if err != nil {
 			log.Fatal(err)
