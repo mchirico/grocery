@@ -1,8 +1,7 @@
-package main
+package pkg
 
 import (
 	"context"
-	"github.com/mchirico/grocery/pkg"
 	"github.com/mongodb/mongo-go-driver/bson"
 	"log"
 	"testing"
@@ -11,7 +10,7 @@ import (
 
 func TestInsert(t *testing.T) {
 
-	a := pkg.App{}
+	a := App{}
 	a.CollectionName = "numbers"
 	ctx, cancel := a.Initilize()
 	defer cancel()
